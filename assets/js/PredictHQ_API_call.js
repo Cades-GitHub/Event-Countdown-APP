@@ -1,75 +1,73 @@
-// Wait for the DOM to be fully loaded before executing the code
 document.addEventListener("DOMContentLoaded", function () {
-    // Define your OpenWeatherMap API key
     const apiKey = "6b7e84ac645512e9524f0cd62a24521e";
-    
-    // Create the URL for the geocoding API
     const geocodingApiUrl = `https://api.openweathermap.org/geo/1.0/direct?limit=1&appid=${apiKey}`;
 
-    // Initialize elements by selecting them from the HTML using their IDs
-    const locationInput = document.getElementById("location"); // Input field for location
-    const searchLocationButton = document.getElementById("searchLocation"); // Button to search for events
-    const categorySelect = document.getElementById("category"); // Dropdown for event categories
-    const eventResults = document.getElementById("eventResults"); // Display area for event results
-    const distanceInput = document.getElementById("distance"); // Input field for maximum distance
-    const dateInput = document.getElementById("date"); // Input field for selecting a date
+    // Initialize elements
+    const locationInput = document.getElementById("location");
+    const searchLocationButton = document.getElementById("searchLocation");
+    const categorySelect = document.getElementById("category");
+    const eventResults = document.getElementById("eventResults");
+    const distanceInput = document.getElementById("distance");
+    const dateInput = document.getElementById("date");
 
-    let latLng = null; // Variable to store latitude and longitude coordinates
+    let latLng = null;
 
-    // Function to fetch location coordinates based on the city name
-    async function fetchLocationCoordinates(cityName) {
-        const geocodingUrl = `${geocodingApiUrl}&q=${cityName}`;
-
-        try {
-            const response = await fetch(geocodingUrl); // Send a request to the geocoding API
-            const data = await response.json(); // Parse the response as JSON
-
-            // Check if the API response contains location data
-            if (data.length > 0) {
+    function initAutocomplete() {
+        // Initialize Google Places Autocomplete here
+        const autocomplete = new google.maps.places.Autocomplete(locationInput);
+    
+        // Event listener when a place is selected from autocomplete
+        autocomplete.addListener("place_changed", function () {
+            const place = autocomplete.getPlace();
+            
+            if (place.geometry && place.geometry.location) {
                 latLng = {
-                    lat: data[0].lat,
-                    lon: data[0].lon,
+                    lat: place.geometry.location.lat(),
+                    lon: place.geometry.location.lng(),
                 };
             } else {
-                latLng = null; // Reset latLng if no data is found
+                latLng = null;
             }
-        } catch (error) {
-            console.error("Error fetching location data:", error);
-            latLng = null; // Reset latLng in case of an error
-        }
+        });
     }
 
-    // Event listener for when the user selects a location
+    // Call the initAutocomplete function to initialize autocomplete
+    initAutocomplete();
+    // Define the fetchLocationCoordinates function
+    function fetchLocationCoordinates(cityName) {
+        // Your implementation here
+    }
+    // Event listener for place selection
     locationInput.addEventListener("change", function () {
         const cityName = locationInput.value;
-        
-        // Add a delay before fetching location coordinates (optional)
+        // Add a delay before fetching location coordinates
         setTimeout(() => {
             fetchLocationCoordinates(cityName);
         }, 1000); // You can adjust the delay (in milliseconds) as needed
     });
 
-    // Event listener for when the "Search Location" button is clicked
+    // Event listener for clicking the "Search Location" button
     searchLocationButton.addEventListener("click", function () {
         if (latLng) {
             console.log("Button clicked");
-            const category = categorySelect.value; // Get the selected event category
-            const maxDistance = distanceInput.value; // Get the maximum distance
+            const category = categorySelect.value;
+            const maxDistance = distanceInput.value;
             const selectedDate = dateInput.value; // Get the user-selected date
 
-            // Create the URL for the PredictHQ API request, including filters for category, distance, and date
-            const apiUrl = `https://api.predicthq.com/v1/events/?category=${category}&country=US&location_around.origin=${latLng.lat},${latLng.lon}&location_around.range=${maxDistance}km&start.gt=${selectedDate}T00:00:00Z`;
-
-            // Make the API request to fetch event data
-            fetch(apiUrl, {
-                headers: {
-                    Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs",
-                },
-            })
-                .then((response) => response.json()) // Parse the JSON response
+            // Make the API request to fetch event data based on latLng, category, distance, and date
+            fetch(
+                `https://api.predicthq.com/v1/events/?category=${category}&country=US&location_around.origin=${latLng.lat},${latLng.lon}&location_around.range=${maxDistance}km&start.gt=${selectedDate}T00:00:00Z`, // Include the date filter in the URL
+                {
+                    headers: {
+                        Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs",
+                    },
+                }
+            )
+                .then((response) => response.json())
                 .then((data) => {
-                    // Handle the JSON data here (you can log it to the console or display it in the eventResults div)
-                    console.log(data);
+                    // Handle the JSON data here
+                    console.log(data); // Log the JSON data to the console
+                    // You can also display the data in the eventResults div or process it as needed
                 })
                 .catch((error) => {
                     console.error("Error fetching event data:", error);
