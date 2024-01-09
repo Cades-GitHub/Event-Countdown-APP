@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const category = categorySelect.value;
             const maxDistance = distanceInput.value;
             const selectedDate = dateInput.value; // Get the user-selected date
+            console.log(selectedDate); // Log the date to the console
+
 
             // Make the API request to fetch event data based on latLng, category, distance, and date
             fetch(
@@ -68,6 +70,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Handle the JSON data here
                     console.log(data); // Log the JSON data to the console
                     // You can also display the data in the eventResults div or process it as needed
+                // Clear the input field after the search
+                locationInput.value = ""; // Set the input field value to an empty string
+                dateInput.value = ""; // Clear date input
                 })
                 .catch((error) => {
                     console.error("Error fetching event data:", error);
