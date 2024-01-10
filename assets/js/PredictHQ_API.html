@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PredictHQ Event Search</title>
+    <script src="./PredictHQ_API_call.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body>
+    <h1>PredictHQ Event Search</h1>
+    <div class="input-container">
+        <!-- Dropdown menu for categories -->
+        <label for="category">Select a Category:</label>
+        <select id="category">
+            <option value="sports,concerts,festivals,conferences,expos,performing-arts">All</option>
+            <option value="sports">Sports</option>
+            <option value="concerts">Concerts</option>
+            <option value="festivals">Festivals</option>
+            <option value="conferences">Conferences</option>
+            <option value="expos">Expos</option>
+            <option value="performing-arts">Performing Arts</option>
+        </select>
+
+        <!-- Enter a City input and button -->
+        <label for="location">Enter a City:</label>
+        <input type="text" id="location" placeholder="Enter a city">
+        <label for="distance">Search Radius (in kilometers):</label>
+        <input type="number" id="distance" name="distance" min="1" value="5">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date">
+        <button id="searchLocation">Search Location</button>
+    </div>
+    <div id="map"></div>
+
+    <!-- Display the results -->
+    <div id="eventResults">
+        <!-- Event data will be displayed here -->
+    </div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap"></script>
+ </body>
+
+</html>
