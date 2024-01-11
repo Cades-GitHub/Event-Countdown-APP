@@ -37,8 +37,10 @@
         <input type="date" id="date" name="date">
         <button id="searchButton">Search Events</button>
     </div>
+
     <script>
- document.addEventListener("DOMContentLoaded", function() {
+
+    document.addEventListener("DOMContentLoaded", function() {
     var date = new Date();
     var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
     var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
@@ -49,10 +51,20 @@
     document.getElementById("date").value = today;
 });
     </script>
+
     <!-- Display the results -->
-    <div id="eventResults">
+<div id="eventResults">
         <!-- Event data will be displayed here -->
+</div>
+
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalText">Some text in the Modal..</p>
     </div>
+
 </body>
 
 </html>
