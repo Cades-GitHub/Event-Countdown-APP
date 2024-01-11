@@ -1,145 +1,136 @@
-    document.addEventListener("DOMContentLoaded", function () {
-        // OpenWeatherMap API key
-        const apiKey = "6b7e84ac645512e9524f0cd62a24521e";
+// Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs
+// AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg
 
-        // API URL for geocoding to get location coordinates
-        const geocodingApiUrl = `https://api.openweathermap.org/geo/1.0/direct?limit=1&appid=${apiKey}`;
+// Define global variables
+let latLng = null;
+let locationInput;
+let categorySelect;
+let distanceInput;
+let dateInput;
+let eventResults;
 
-        // Initialize HTML elements
-        const locationInput = document.getElementById("location");
-        const searchLocationButton = document.getElementById("searchLocation");
-        const categorySelect = document.getElementById("category");
-        const eventResults = document.getElementById("eventResults");
-        const distanceInput = document.getElementById("distance");
-        const dateInput = document.getElementById("date");
+// Function to fetch location coordinates based on city name
+function fetchLocationCoordinates(cityName) {
+    const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg`; // Replace with your Geocoding API key
 
-        // Initialize variable to store location coordinates
-        let latLng = null;
+    const requestUrl = `${geocodingApiUrl}&address=${encodeURIComponent(cityName)}`;
+    console.log("Geocoding API Request:", requestUrl); // Log the API request URL for debugging
 
-        // Initialize Google Map
-        let map;
+    fetch(requestUrl)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Geocoding API Error: ${response.status} - ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Geocoding API Response:", data); // Log the API response for debugging
 
-        // Function to fetch location coordinates based on city name
-        function fetchLocationCoordinates(cityName) {
-            // You can use the OpenWeatherMap API or any other geocoding service here
-            // For example, using the OpenWeatherMap API:
-            fetch(`${geocodingApiUrl}&q=${encodeURIComponent(cityName)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.length > 0) {
-                        // Assuming the first result is the desired location
-                        const location = data[0];
-                        latLng = {
-                            lat: location.lat,
-                            lon: location.lon,
-                        };
-                        // Call a function to update the map with the new location
-                        updateMapWithLocation(location.lat, location.lon);
-                    } else {
-                        latLng = null;
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching location coordinates:", error);
-                    latLng = null;
-                });
-        }
+            if (data.results.length > 0) {
+                const location = data.results[0].geometry.location;
+                latLng = {
+                    lat: location.lat,
+                    lon: location.lng,
+                };
+                console.log("Set latLng:", latLng); // Log the latLng variable
 
-        // Function to update the map with a new location
-        function updateMapWithLocation(latitude, longitude) {
-            const coordinates = new google.maps.LatLng(latitude, longitude);
-
-            new google.maps.Marker({
-                position: coordinates,
-                map: map,
-                title: "Event Location",
-            });
-        }
-
-        // Event listener for location input changes
-        locationInput.addEventListener("change", function () {
-            const cityName = locationInput.value;
-            // Add a delay before fetching location coordinates
-            setTimeout(() => {
-                fetchLocationCoordinates(cityName);
-            }, 1000); // Delay in milliseconds
-        });
-
-        // Event listener for clicking the "Search Location" button
-        searchLocationButton.addEventListener("click", function () {
-            if (latLng) {
-                console.log("Button clicked");
-                const category = categorySelect.value;
-                const maxDistance = distanceInput.value;
-                const selectedDate = dateInput.value; // Get the user-selected date
-                console.log(selectedDate); // Log the date to the console
-
-                // Make the API request to fetch event data based on location, category, distance, and date
-                fetch(
-                    `https://api.predicthq.com/v1/events/?category=${category}&country=US&location_around.origin=${latLng.lat},${latLng.lon}&location_around.range=${maxDistance}km&start.gt=${selectedDate}T00:00:00Z`, // Include the category, location, distance, and date in the API URL
-                    {
-                        headers: {
-                            Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs",
-                        },
-                    }
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Handle the JSON data here
-                        console.log(data); // Log the JSON data to the console
-                        eventResults.innerHTML = ""; // Clear the event results
-
-                        // Loop through each event in the JSON data and plot markers on the map
-                        data.results.forEach((event) => {
-                            // Extract location coordinates from the event
-                            const latitude = event.location[1];
-                            const longitude = event.location[0];
-                            // Create a marker for the event on the map
-                            updateMapWithLocation(latitude, longitude);
-                            // Create a header element for the event name
-                            const eventHeader = document.createElement("h3");
-                            eventHeader.textContent = event.title;
-                            // Create a paragraph element for event details
-                            const eventDetails = document.createElement("p");
-                            eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`;
-                            // Create a list item for the event
-                            const eventItem = document.createElement("li");
-                            eventItem.appendChild(eventHeader);
-                            eventItem.appendChild(eventDetails);
-                            // Append the event item to the event results list
-                            eventResults.appendChild(eventItem);
-                        });
-                        // Clear the input fields after the search
-                        locationInput.value = ""; // Clear the location input
-                        dateInput.value = ""; // Clear the date input
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching event data:", error);
-                    });
             } else {
-                alert("Please select a valid city from the autocomplete dropdown.");
+                latLng = null;
+                alert("City not found. Please enter a valid city name.");
             }
+        })
+        .catch((error) => {
+            console.error("Error fetching location coordinates:", error);
+            latLng = null;
+            alert("Error fetching location coordinates. Please try again later.");
         });
+}
+
+// Function to fetch events using latitude and longitude
+function fetchEvents(latitude, longitude, category, maxDistance, formattedDate) {
+    const requestUrl = `https://api.predicthq.com/v1/events/?category=${category}&country=US&within=${maxDistance}mi@${latitude},${longitude}&start.gte=${formattedDate}&sort=start`;
+
+    console.log("PredictHQ API Request URL:", requestUrl); // Log the request URL
+
+    fetch(requestUrl, {
+        headers: {
+            Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs", // Replace with your PredictHQ API key
+        },
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log("API Response:", data); // Log the API response for debugging
+
+        // Handle the fetched event data here
+        eventResults.innerHTML = ""; // Clear the event results
+
+        if (data && data.results && data.results.length > 0) {
+            data.results.forEach((event) => {
+                const eventHeader = document.createElement("h3");
+                eventHeader.textContent = event.title;
+
+                const eventDetails = document.createElement("p");
+                eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`;
+
+                const eventItem = document.createElement("li");
+                eventItem.appendChild(eventHeader);
+                eventItem.appendChild(eventDetails);
+                eventResults.appendChild(eventItem);
+            });
+        } else {
+            eventResults.innerHTML = "<p>No events found.</p>"; // Show message if no events
+        }
+
+        // Clear the input fields after the search
+        locationInput.value = "";
+        var date = new Date();
+        var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
+        var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
+        var year = date.getFullYear();
+        var today = `${year}-${month}-${day}`; // Format to YYYY-MM-DD
+        document.getElementById("date").value = today;
+        dateInput.value = "date";
+    })
+    .catch((error) => {
+        console.error("Error fetching event data:", error);
+        eventResults.innerHTML = "<p>Error fetching events. Please try again later.</p>";
     });
+}
 
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 36.998, lng: -109.045 }, // You can set this to a default location
-            zoom: 8
-        });
+// Event listener for DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize HTML elements
+    locationInput = document.getElementById("location");
+    categorySelect = document.getElementById("category");
+    distanceInput = document.getElementById("distance");
+    dateInput = document.getElementById("date");
+    eventResults = document.getElementById("eventResults");
 
-        // Initialize Autocomplete
-        const locationInput = document.getElementById("location");
-        const autocomplete = new google.maps.places.Autocomplete(locationInput);
-        autocomplete.bindTo("bounds", map);
+    // Event listener for location input changes
+    locationInput.addEventListener("change", function () {
+        const cityName = locationInput.value;
+        setTimeout(() => {
+            fetchLocationCoordinates(cityName);
+        }, 1000); // Delay in milliseconds
+    });
+     // Initialize the search button
+     const searchButton = document.getElementById("searchButton");
 
-        // Listener for place changes in autocomplete
-        autocomplete.addListener("place_changed", function() {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                console.log("No details available for input: '" + place.name + "'");
-                return;
-            }
-            // Use place details like place.geometry.location
-        });
-    }
+     // Event listener for the search button click
+     searchButton.addEventListener("click", function () {
+         if (latLng && latLng.lat && latLng.lon) {
+             const category = categorySelect.value;
+             const maxDistance = distanceInput.value;
+             const formattedDate = dateInput.value; // Make sure this is formatted correctly
+ 
+             fetchEvents(latLng.lat, latLng.lon, category, maxDistance, formattedDate);
+         } else {
+             alert("Please enter a valid location.");
+         }
+     });
+});

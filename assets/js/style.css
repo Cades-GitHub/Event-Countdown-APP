@@ -1,3 +1,11 @@
+.background-image {
+    background-image: url('./background.jpg');
+    background-size: cover; /* You can use other values like 'contain' or specific dimensions */
+    background-repeat: no-repeat; /* Control how the image repeats */
+    background-position: center center; /* Control the position of the image */
+    opacity: 0.5;
+}
+
 body {
     font-family: Arial, sans-serif;
 }
@@ -13,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 25%;
 }
 
 label {
@@ -49,6 +58,6 @@ button:hover {
 
 #map {
     height: 400px;
-    width: 100%;
+    width: 25%;
     margin-top: 20px;
 }

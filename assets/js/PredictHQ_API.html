@@ -3,6 +3,12 @@
 
 <head>
     <title>PredictHQ Event Search</title>
+    <script>
+        function initMap() {
+            // Your code to initialize the map goes here
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap" async defer></script>
     <script src="./PredictHQ_API_call.js"></script>
     <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
@@ -25,19 +31,28 @@
         <!-- Enter a City input and button -->
         <label for="location">Enter a City:</label>
         <input type="text" id="location" placeholder="Enter a city">
-        <label for="distance">Search Radius (in kilometers):</label>
+        <label for="distance">Search Radius (in miles):</label>
         <input type="number" id="distance" name="distance" min="1" value="5">
         <label for="date">Select Date:</label>
         <input type="date" id="date" name="date">
-        <button id="searchLocation">Search Location</button>
+        <button id="searchButton">Search Events</button>
     </div>
-    <div id="map"></div>
+    <script>
+ document.addEventListener("DOMContentLoaded", function() {
+    var date = new Date();
+    var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
+    var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
+    var year = date.getFullYear();
 
+    var today = `${year}-${month}-${day}`; // Format to YYYY-MM-DD
+
+    document.getElementById("date").value = today;
+});
+    </script>
     <!-- Display the results -->
     <div id="eventResults">
         <!-- Event data will be displayed here -->
     </div>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap"></script>
- </body>
+</body>
 
 </html>
