@@ -1,6 +1,6 @@
 // Global variables to store references to various HTML elements and data
 let latLng = null; // Stores latitude and longitude
-let locationInput; // Input element for location
+let locationInput = document.getElementById("location");
 let categorySelect; // Select element for choosing event category
 let distanceInput; // Input for search radius
 let dateInput; // Input for selecting date
@@ -16,6 +16,9 @@ function fetchLocationCoordinates(cityName) {
     const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg`;
     const requestUrl = `${geocodingApiUrl}&address=${encodeURIComponent(cityName)}`;
 
+    // Log the API request URL to the console for debugging
+    console.log("Geocoding API Request URL:", requestUrl);
+
     // Fetch request to the Geocoding API
     fetch(requestUrl) // Fetch request to the Geocoding API full URL
         .then((response) => {
@@ -26,9 +29,14 @@ function fetchLocationCoordinates(cityName) {
             return response.json();
         })
         .then((data) => {
+            
+            // Log the API response to the console for debugging
+            console.log("Geocoding API Response:", data);
+
             // If the response contains location data
             if (data.results.length > 0) {
                 const location = data.results[0].geometry.location;
+                
                 // Set the global variable with latitude and longitude
                 latLng = {
                     lat: location.lat,
