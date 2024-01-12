@@ -1,112 +1,74 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-    <title>Event Countdown App</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <body>
-    <section class="ftco-section">
-    <div class="container">
-    <div class="row justify-content-center">
-    <div class="col-md-6 text-center mb-5">
-    <h2 class="heading-section">Event Countdown App</h2>
+<html>
+
+<head>
+    <title>PredictHQ Event Search</title>
+    <script>
+        function initMap() {
+            // Your code to initialize the map goes here
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap" async defer></script>
+    <script src="./assets/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+</head>
+
+<body>
+    <h1>PredictHQ Event Search</h1>
+    <div class="input-container">
+        <!-- Dropdown menu for categories -->
+        <label for="category">Select a Category:</label>
+        <select id="category">
+            <option value="sports,concerts,festivals,conferences,expos,performing-arts">All</option>
+            <option value="sports">Sports</option>
+            <option value="concerts">Concerts</option>
+            <option value="festivals">Festivals</option>
+            <option value="conferences">Conferences</option>
+            <option value="expos">Expos</option>
+            <option value="performing-arts">Performing Arts</option>
+        </select>
+
+        <!-- Enter a City input and button -->
+        <label for="location">Enter a City:</label>
+        <input type="text" id="location" placeholder="Enter a city">
+        <label for="distance">Search Radius (in miles):</label>
+        <input type="number" id="distance" name="distance" min="1" value="5">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date">
+        <button id="searchButton">Search Events</button>
     </div>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    var date = new Date();
+    var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
+    var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
+    var year = date.getFullYear();
+
+    var today = `${year}-${month}-${day}`; // Format to YYYY-MM-DD
+    document.getElementById("date").value = today;
+
+    locationInput = document.getElementById('location');
+            locationInput.addEventListener('input', () => {
+                const inputText = locationInput.value;
+            });
+});
+    </script>
+
+    <!-- Display the results -->
+<div id="eventResults">
+        <!-- Event data will be displayed here -->
+</div>
+
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalText">Some text in the Modal..</p>
     </div>
-    <div class="row">
-    <div class="col-md-12">
-    <div class="elegant-calencar d-md-flex">
-    <div class="wrap-header d-flex align-items-center">
-    <p id="reset">reset</p>
-    <div id="header" class="p-0">
-    <div class="pre-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-left"></i></div>
-    <div class="head-info">
-    <div class="head-day">8</div>
-    <div class="head-month">January - 2024</div>
-    </div>
-    <div class="next-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-right"></i></div>
-    </div>
-    </div>
-    <div class="calendar-wrap">
-    <table id="calendar">
-    <thead>
-    <tr>
-    <th>Sun</th>
-    <th>Mon</th>
-    <th>Tue</th>
-    <th>Wed</th>
-    <th>Thu</th>
-    <th>Fri</th>
-    <th>Sat</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td id="disabled" class=""></td>
-    <td id="" class="">1</td>
-    <td id="" class="">2</td>
-    <td id="" class="">3</td>
-    <td id="" class="">4</td>
-    <td id="" class="">5</td>
-    <td id="" class="">6</td>
-    </tr>
-    <tr>
-    <td id="" class="">7</td>
-    <td id="today" class="">8</td>
-    <td id="" class="">9</td>
-    <td id="" class="">10</td>
-    <td id="" class="">11</td>
-    <td id="" class="">12</td>
-    <td id="" class="">13</td>
-    </tr>
-    <tr>
-    <td id="" class="">14</td>
-    <td id="" class="">15</td>
-    <td id="" class="">16</td>
-    <td id="" class="">17</td>
-    <td id="" class="">18</td>
-    <td id="" class="">19</td>
-    <td id="" class="">20</td>
-    </tr>
-    <tr>
-    <td id="" class="">21</td>
-    <td id="" class="">22</td>
-    <td id="" class="">23</td>
-    <td id="" class="">24</td>
-    <td id="" class="">25</td>
-    <td id="" class="">26</td>
-    <td id="" class="">27</td>
-    </tr>
-    <tr>
-    <td id="" class="">28</td>
-    <td id="" class="">29</td>
-    <td id="" class="">30</td>
-    <td id="" class="">31</td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    </tr>
-    <tr>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    <td id="disabled" class=""></td>
-    </tr>
-    </tbody>
-    </table>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </section>
-    <script src="./assets/js/jquery.min.js"></script>
-    <script src="./assets/js/popper.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
-    <script src="./assets/js/script.js"></script>    
-    
-    </body></html>
+
+</body>
+
+</html>

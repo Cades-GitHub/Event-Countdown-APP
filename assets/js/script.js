@@ -1,167 +1,188 @@
-(function($) {
+// Global variables to store references to various HTML elements and data
+let latLng = null; // Stores latitude and longitude
+let locationInput = document.getElementById("location");
+let categorySelect; // Select element for choosing event category
+let distanceInput; // Input for search radius
+let dateInput; // Input for selecting date
+let eventResults; // Element to display event results
 
-	"use strict";
+// Add modal related variables
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
 
-	document.addEventListener('DOMContentLoaded', function(){
-    var today = new Date(),
-        year = today.getFullYear(),
-        month = today.getMonth(),
-        monthTag =["January","February","March","April","May","June","July","August","September","October","November","December"],
-        day = today.getDate(),
-        days = document.getElementsByTagName('td'),
-        selectedDay,
-        setDate,
-        daysLen = days.length;
-// options should like '2014-01-01'
-    function Calendar(selector, options) {
-        this.options = options;
-        this.draw();
-    }
-    
-    Calendar.prototype.draw  = function() {
-        this.getCookie('selected_day');
-        this.getOptions();
-        this.drawDays();
-        var that = this,
-            reset = document.getElementById('reset'),
-            pre = document.getElementsByClassName('pre-button'),
-            next = document.getElementsByClassName('next-button');
+// Function to fetch geographic coordinates (latitude and longitude) based on a city name
+function fetchLocationCoordinates(cityName) {
+    // URL for Google Geocoding API with API key and city name
+    const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg`;
+    const requestUrl = `${geocodingApiUrl}&address=${encodeURIComponent(cityName)}`;
+
+    // Log the API request URL to the console for debugging
+    console.log("Geocoding API Request URL:", requestUrl);
+
+    // Fetch request to the Geocoding API
+    fetch(requestUrl) // Fetch request to the Geocoding API full URL
+        .then((response) => {
+            // Handle responses
+            if (!response.ok) {
+                throw new Error(`Geocoding API Error: ${response.status} - ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
             
-            pre[0].addEventListener('click', function(){that.preMonth(); });
-            next[0].addEventListener('click', function(){that.nextMonth(); });
-            reset.addEventListener('click', function(){that.reset(); });
-        while(daysLen--) {
-            days[daysLen].addEventListener('click', function(){that.clickDay(this); });
-        }
-    };
-    
-    Calendar.prototype.drawHeader = function(e) {
-        var headDay = document.getElementsByClassName('head-day'),
-            headMonth = document.getElementsByClassName('head-month');
+            // Log the API response to the console for debugging
+            console.log("Geocoding API Response:", data);
 
-            e?headDay[0].innerHTML = e : headDay[0].innerHTML = day;
-            headMonth[0].innerHTML = monthTag[month] +" - " + year;        
-     };
-    
-    Calendar.prototype.drawDays = function() {
-        var startDay = new Date(year, month, 1).getDay(),
-            nDays = new Date(year, month + 1, 0).getDate(),
-    
-            n = startDay;
-        for(var k = 0; k <42; k++) {
-            days[k].innerHTML = '';
-            days[k].id = '';
-            days[k].className = '';
-        }
-
-        for(var i  = 1; i <= nDays ; i++) {
-            days[n].innerHTML = i; 
-            n++;
-        }
-        
-        for(var j = 0; j < 42; j++) {
-            if(days[j].innerHTML === ""){
+            // If the response contains location data
+            if (data.results.length > 0) {
+                const location = data.results[0].geometry.location;
                 
-                days[j].id = "disabled";
-                
-            }else if(j === day + startDay - 1){
-                if((this.options && (month === setDate.getMonth()) && (year === setDate.getFullYear())) || (!this.options && (month === today.getMonth())&&(year===today.getFullYear()))){
-                    this.drawHeader(day);
-                    days[j].id = "today";
-                }
+                // Set the global variable with latitude and longitude
+                latLng = {
+                    lat: location.lat,
+                    lon: location.lng,
+                };
+            } else {
+                // If no location data is found, reset latLng and alert the user
+                latLng = null;
+                showModal("City not found. Please enter a valid city name.");
             }
-            if(selectedDay){
-                if((j === selectedDay.getDate() + startDay - 1)&&(month === selectedDay.getMonth())&&(year === selectedDay.getFullYear())){
-                days[j].className = "selected";
-                this.drawHeader(selectedDay.getDate());
-                }
-            }
-        }
-    };
-    
-    Calendar.prototype.clickDay = function(o) {
-        var selected = document.getElementsByClassName("selected"),
-            len = selected.length;
-        if(len !== 0){
-            selected[0].className = "";
-        }
-        o.className = "selected";
-        selectedDay = new Date(year, month, o.innerHTML);
-        this.drawHeader(o.innerHTML);
-        this.setCookie('selected_day', 1);
-        
-    };
-    
-    Calendar.prototype.preMonth = function() {
-        if(month < 1){ 
-            month = 11;
-            year = year - 1; 
-        }else{
-            month = month - 1;
-        }
-        this.drawHeader(1);
-        this.drawDays();
-    };
-    
-    Calendar.prototype.nextMonth = function() {
-        if(month >= 11){
-            month = 0;
-            year =  year + 1; 
-        }else{
-            month = month + 1;
-        }
-        this.drawHeader(1);
-        this.drawDays();
-    };
-    
-    Calendar.prototype.getOptions = function() {
-        if(this.options){
-            var sets = this.options.split('-');
-                setDate = new Date(sets[0], sets[1]-1, sets[2]);
-                day = setDate.getDate();
-                year = setDate.getFullYear();
-                month = setDate.getMonth();
-        }
-    };
-    
-     Calendar.prototype.reset = function() {
-         month = today.getMonth();
-         year = today.getFullYear();
-         day = today.getDate();
-         this.options = undefined;
-         this.drawDays();
-     };
-    
-    Calendar.prototype.setCookie = function(name, expiredays){
-        if(expiredays) {
-            var date = new Date();
-            date.setTime(date.getTime() + (expiredays*24*60*60*1000));
-            var expires = "; expires=" +date.toGMTString();
-        }else{
-            var expires = "";
-        }
-        document.cookie = name + "=" + selectedDay + expires + "; path=/";
-    };
-    
-    Calendar.prototype.getCookie = function(name) {
-        if(document.cookie.length){
-            var arrCookie  = document.cookie.split(';'),
-                nameEQ = name + "=";
-            for(var i = 0, cLen = arrCookie.length; i < cLen; i++) {
-                var c = arrCookie[i];
-                while (c.charAt(0)==' ') {
-                    c = c.substring(1,c.length);
-                    
-                }
-                if (c.indexOf(nameEQ) === 0) {
-                    selectedDay =  new Date(c.substring(nameEQ.length, c.length));
-                }
-            }
-        }
-    };
-    var calendar = new Calendar();
-    
-        
-}, false);
+        })
+        .catch((error) => {
+            // Log and alert any errors encountered
+            console.error("Error fetching location coordinates:", error);
+            latLng = null;
+            showModal("Error fetching location coordinates. Please try again later.");
+        });
+}
 
-})(jQuery);
+// Function to fetch events based on latitude, longitude, category, distance, and date
+function fetchEvents(latitude, longitude, category, maxDistance, formattedDate) {
+    // Construct request URL for PredictHQ API
+    const requestUrl = `https://api.predicthq.com/v1/events/?category=${category}&country=US&within=${maxDistance}mi@${latitude},${longitude}&start.gte=${formattedDate}&sort=start`;
+
+    // Fetch request to the PredictHQ API
+    fetch(requestUrl, {
+        headers: {
+            Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs", // API key for authorization
+        },
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        // Clear any previous event results
+        eventResults.innerHTML = "";
+
+        // Check if data is received and has results
+        if (data && data.results && data.results.length > 0) {
+            // Loop through each event and display it
+            data.results.forEach((event) => {
+                // Create and append elements for each event detail
+                const eventHeader = document.createElement("h3");
+                eventHeader.textContent = event.title;
+
+                const eventDetails = document.createElement("p");
+                eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`;
+
+                const eventItem = document.createElement("li");
+                eventItem.appendChild(eventHeader);
+                eventItem.appendChild(eventDetails);
+                eventResults.appendChild(eventItem);
+            });
+        } else {
+            // Display a message if no events are found
+            eventResults.innerHTML = "<p>No events found.</p>";
+        }
+
+        // Reset the input fields after the search
+        locationInput.value = "";
+        dateInput.value = new Date().toISOString().split('T')[0]; // Reset to today's date
+    })
+    .catch((error) => {
+        // Log and display any errors encountered
+        console.error("Error fetching event data:", error);
+        eventResults.innerHTML = "<p>Error fetching events. Please try again later.</p>";
+    });
+}
+
+
+// Event listener that triggers when the DOM content is fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize HTML elements by their IDs
+    locationInput = document.getElementById("location");
+    categorySelect = document.getElementById("category");
+    distanceInput = document.getElementById("distance");
+    dateInput = document.getElementById("date");
+    eventResults = document.getElementById("eventResults");
+
+    // Listener for changes in location input field
+    locationInput.addEventListener("change", function () {
+        const cityName = locationInput.value;
+        // Delay fetching location coordinates by 1 second after input change
+        setTimeout(() => {
+            fetchLocationCoordinates(cityName);
+        }, 500);
+    });
+
+// Initialize and set event listener for search button
+const searchButton = document.getElementById("searchButton");
+searchButton.addEventListener("click", function () {
+    // Obtain the city name from the location input field
+    const cityName = locationInput.value;
+
+    // Check if the city name is empty and show the modal if it is
+    if (!cityName.trim()) {
+        showModal("Please enter a city name.");
+        return; // Stop further execution
+    }
+
+    // Continue with fetching location coordinates if city name is not empty
+    fetchLocationCoordinates(cityName);
+
+    // Ensure latLng is set before fetching events
+    if (latLng && latLng.lat && latLng.lon) {
+        // Get the current date in the user's local time zone
+        const today = new Date();
+
+        // Parse the date input's value manually (assuming it's in YYYY-MM-DD format)
+        const dateValue = dateInput.value.split('-');
+        const selectedDate = new Date(dateValue[0], dateValue[1] - 1, dateValue[2]); // Month is 0-based
+
+        // Set time to start of day for accurate date comparison
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        // Check if the selected date is in the past
+        if (selectedDate < today) {
+            showModal("The selected date is in the past. Please choose a future date.");
+            return; // Stop further execution
+        }
+
+        // Fetch events using the selected criteria
+        fetchEvents(latLng.lat, latLng.lon, categorySelect.value, distanceInput.value, dateInput.value);
+    } else {
+        showModal("Please enter a valid location.");
+    }
+});
+
+    // Add modal related variables
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
+function showModal(message) {
+    document.getElementById("modalText").innerText = message;
+    modal.style.display = "block";
+}
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+});
