@@ -1,27 +1,31 @@
-.background-image {
-    background-image: url('./background.jpg');
-    background-size: cover; /* You can use other values like 'contain' or specific dimensions */
-    background-repeat: no-repeat; /* Control how the image repeats */
-    background-position: center center; /* Control the position of the image */
-    opacity: 0.5;
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
 }
 
 body {
-    font-family: Arial, sans-serif;
+    background-color: #d9d9d9;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 20px;
+h1{
+    font-size: 1.75rem;
+    text-align: center;
+    padding: 18px 0;
+    color: #565656;
 }
 
 .input-container {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
     width: 25%;
+    padding: 30px;
+    margin: 20px;
 }
 
 label {
@@ -52,14 +56,22 @@ button:hover {
     background-color: #0056b3;
 }
 
-.results-container {
-    margin-top: 20px;
+.map-container{
+
 }
 
 #map {
     height: 400px;
     width: 25%;
     margin-top: 20px;
+}
+
+.details-container{
+
+}
+
+.weather-container{
+    
 }
 
 /* The Modal (background) */
