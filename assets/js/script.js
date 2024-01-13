@@ -2,10 +2,6 @@
 const geocodingApiKey = "AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg";
 const predicthqApiKey = "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs";
 
-// API keys
-const geocodingApiKey = "AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg";
-const predicthqApiKey = "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs";
-
 // Global variables to store references to various HTML elements and data
 let latLng = null; // Stores latitude and longitude
 categorySelect = document.getElementById("category"); // Select element for category
@@ -15,6 +11,23 @@ let eventResults; // Element to display event results
 let locationInput; // Input for location search
 let modal; // Modal element
 let span;   // <span> element that closes the modal
+
+function initMap() {
+    // Initialize Google Places Autocomplete here
+    const autocomplete = new google.maps.places.Autocomplete(locationInput);
+    autocomplete.addListener("place_changed", function () {
+        // Your Autocomplete event handler
+    });
+
+    // Set the default center to the middle of the USA (Kansas City, Missouri)
+    const defaultLatLng = { lat: 39.0997, lng: -94.5786 }; // Kansas City, Missouri coordinates
+    const map = new google.maps.Map(document.getElementById("map-container"), {
+        center: defaultLatLng, // Set the center of the map
+        zoom: 5, // Set an appropriate initial zoom level
+    });
+
+    // Optionally, you can add other map configurations here, such as markers, controls, etc.
+}
 
 function showModal(message) { // Function to display a modal with a message
     document.getElementById("modalText").innerText = message; // Set the modal text
@@ -102,6 +115,7 @@ function fetchEvents(latitude, longitude, category, maxDistance, date) { // Func
         return response.json(); // Return the response as JSON
     })
     .then((data) => { // Handle data received from the PredictHQ API
+        console.log("PredictHQ API Response:", data); // Log the data received from the PredictHQ API to the console for debugging
         eventResults.innerHTML = ""; // Clear any previous event results
 
         if (data && data.results && data.results.length > 0) { // If the response contains event data
@@ -135,76 +149,85 @@ document.addEventListener("DOMContentLoaded", function () { // Event listener th
     initializeModal(); // Initialize the modal
 
     // Initialize HTML elements by their IDs
-    locationInput = document.getElementById("location");
-    categorySelect = document.getElementById("category");
-    distanceInput = document.getElementById("distance");
-    dateInput = document.getElementById("date");
-    eventResults = document.getElementById("eventResults");
+    locationInput = document.getElementById("location"); // Input for location search
+    categorySelect = document.getElementById("category"); // Select element for category
+    distanceInput = document.getElementById("distance");  // Input for search radius
+    dateInput = document.getElementById("date"); // Input for selecting date
+    eventResults = document.getElementById("eventResults"); // Element to display event results
 
-    // Listener for changes in location input field
-    locationInput.addEventListener("change", function () {
-        const cityName = locationInput.value;
-        // Delay fetching location coordinates by 1 second after input change
-        setTimeout(() => {
-            fetchLocationCoordinates(cityName);
-        }, 500);
-    });
+    function initMap() {
+        // Initialize Google Places Autocomplete here
+        const autocomplete = new google.maps.places.Autocomplete(locationInput);
+        autocomplete.addListener("place_changed", function () {
+            const selectedPlace = autocomplete.getPlace(); // Get the selected place
+            const cityName = selectedPlace.name; // Get the city name from the selected place
 
-// Initialize and set event listener for search button
-const searchButton = document.getElementById("searchButton");
-searchButton.addEventListener("click", function () {
-    // Obtain the city name from the location input field
-    const cityName = locationInput.value;
+            // You can then use cityName for further processing
+            if (selectedPlace.geometry && selectedPlace.geometry.location) {    // Check if the selected place has location data
+                const latitude = selectedPlace.geometry.location.lat(); // Get the latitude
+                const longitude = selectedPlace.geometry.location.lng(); // Get the longitude
 
-    // Check if the city name is empty and show the modal if it is
-    if (!cityName.trim()) {
-        showModal("Please enter a city name.");
-        return; // Stop further execution
+                // You can use the latitude and longitude values here
+                console.log("Selected Latitude:", latitude); // Log the latitude and longitude to the console for debugging
+                console.log("Selected Longitude:", longitude); 
+            } else {
+                console.log("No location data available for the selected place."); // Log to the console for debugging
+            }
+
+            // Check if the city name is empty and show the modal if it is
+            if (!cityName.trim()) { // Check if the city name is empty
+                showModal("Please enter a city name."); // Show the modal with an error message
+                return; // Stop further execution of the function
+            }
+        });
     }
-
-    // Continue with fetching location coordinates if city name is not empty
-    fetchLocationCoordinates(cityName);
-
-    // Ensure latLng is set before fetching events
-    if (latLng && latLng.lat && latLng.lon) {
-        // Get the current date in the user's local time zone
-        const today = new Date();
-
-        // Parse the date input's value manually (assuming it's in YYYY-MM-DD format)
-        const dateValue = dateInput.value.split('-');
-        const selectedDate = new Date(dateValue[0], dateValue[1] - 1, dateValue[2]); // Month is 0-based
-
-        // Set time to start of day for accurate date comparison
-        today.setHours(0, 0, 0, 0);
-        selectedDate.setHours(0, 0, 0, 0);
-
-        // Check if the selected date is in the past
-        if (selectedDate < today) {
-            showModal("The selected date is in the past. Please choose a future date.");
-            return; // Stop further execution
-        }
-
-        // Fetch events using the selected criteria
-        fetchEvents(latLng.lat, latLng.lon, categorySelect.value, distanceInput.value, dateInput.value);
-    } else {
-        showModal("Please enter a valid location.");
-    }
-});
-
-    // Add modal related variables
-var modal = document.getElementById("myModal");
-var span = document.getElementsByClassName("close")[0];
-function showModal(message) {
-    document.getElementById("modalText").innerText = message;
-    modal.style.display = "block";
-}
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-});
+    
+    // Initialize and set event listener for the search button
+    const searchButton = document.getElementById("searchButton"); // Search button
+    searchButton.addEventListener("click", function () { // Add event listener for click event
+        // Obtain the city name from the location input field
+        const cityName = locationInput.value; // Get the city name from the location input field
+       // Inside the event listener for the search button
+       const selectedCategory = categorySelect.value; // Get the selected category
+       const maxDistance = distanceInput.value; // Get the maxDistance input value
+       const selectedDate = dateInput.value; // Get the selected date input value
+       
+       // Check if the city name is empty and show the modal if it is
+       if (!cityName.trim()) { // Check if the city name is empty
+           showModal("Please enter a city name."); // Show the modal with an error message
+           return; // Stop further execution
+       }
+       
+       fetchLocationCoordinates(cityName) // Call fetchLocationCoordinates with the city name
+           .then(() => { // Handle successful fetchLocationCoordinates
+               if (latLng && latLng.lat && latLng.lon) { // Check if latLng is not null and has latitude and longitude values
+                   // Get the current date in the user's local time zone
+                   const today = new Date(); // Get the current date
+       
+                   // Parse the date input's value manually (assuming it's in YYYY-MM-DD format)
+                   const dateValue = selectedDate.split('-'); // Use the selectedDate variable
+                   const selectedDateObj = new Date(dateValue[0], dateValue[1] - 1, dateValue[2]); // Month is 0-based
+       
+                   // Set time to start of day for accurate date comparison
+                   today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
+                   selectedDateObj.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
+       
+                   // Check if the selected date is in the past
+                   if (selectedDateObj < today) { // Check if the selected date is in the past
+                       showModal("The selected date is in the past. Please choose a future date."); // Show the modal with an error message
+                       return; // Stop further execution
+                   }
+                   // Fetch events using the selected criteria
+                   fetchEvents(latLng.lat, latLng.lon, selectedCategory, maxDistance, selectedDate); // Call fetchEvents with the latitude, longitude, category, distance, and date
+               }    // End of if block for checking latLng 
+               else {
+                   // If latLng is null, show an error message
+                   showModal("Error fetching location coordinates. Please try again later.");
+               }    // End of if block for checking latLng
+           })   // End of .then block for fetchLocationCoordinates
+           .catch((error) => {
+               // Handle errors from fetchLocationCoordinates
+               console.error("Error in fetchLocationCoordinates:", error);
+           });  // End of fetchLocationCoordinates
+    });  // End of searchButton event listener
+});  // End of DOMContentLoaded event listener
