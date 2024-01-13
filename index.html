@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< Updated upstream
 <html lang="en"><head>
     <title>Event Countdown App</title>
     <meta charset="utf-8">
@@ -110,3 +111,73 @@
     <script src="./assets/js/script.js"></script>    
     
     </body></html>
+=======
+<html>
+
+<head>
+    <title>PredictHQ Event Search</title>
+    <!-- Load Google Maps JavaScript library and initialize Autocomplete -->
+    <script>
+        function initMap() {
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap"></script>
+    <script src="./assets/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+</head>
+
+<body>
+    <h1>PredictHQ Event Search</h1>
+    <div class="input-container">
+        <!-- Dropdown menu for categories -->
+        <label for="category">Select a Category:</label>
+        <select id="category">
+            <option value="sports,concerts,festivals,conferences,expos,performing-arts">All</option>
+            <option value="sports">Sports</option>
+            <option value="concerts">Concerts</option>
+            <option value="festivals">Festivals</option>
+            <option value="conferences">Conferences</option>
+            <option value="expos">Expos</option>
+            <option value="performing-arts">Performing Arts</option>
+            
+        </select>
+
+        <!-- Enter a City input and button -->
+        <label for="location">Enter a City:</label>
+        <input type="text" id="location" placeholder="Enter a city" autocomplete="on">
+        <label for="distance">Search Radius (in miles):</label>
+        <input type="number" id="distance" name="distance" min="1" value="5">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date">
+        <button id="searchButton">Search Events</button>
+    </div>
+
+    <!-- Display the results -->
+    <div id="eventResults">
+        <!-- Event data will be displayed here -->
+    </div>
+
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Some text in the Modal..</p>
+        </div>
+    </div>
+
+    <script>
+        // Set the default date to today
+        document.addEventListener("DOMContentLoaded", function () {
+            var date = new Date();
+            var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
+            var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
+            var year = date.getFullYear();
+
+            var today = `${year}-${month}-${day}`; // Format to YYYY-MM-DD
+            document.getElementById("date").value = today;
+        });
+    </script>
+</body>
+
+</html>
+>>>>>>> Stashed changes
