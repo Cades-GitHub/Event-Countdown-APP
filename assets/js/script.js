@@ -94,7 +94,7 @@ function fetchLocationCoordinates(cityName) { // Function to fetch geographic co
     }); // End of Promise
 }   // End of fetchLocationCoordinates function
 
-function fetchEvents(latitude, longitude, category, maxDistance, date) { // Function to fetch events based on latitude, longitude, category, distance, and date
+function fetchEvents(latitude, longitude, category, maxDistance, date, cityName) { // Function to fetch events based on latitude, longitude, category, distance, and date
     console.log("Inside fetchEvents function");  // Log to the console for debugging
  
     // Construct request URL for PredictHQ API
@@ -121,16 +121,24 @@ function fetchEvents(latitude, longitude, category, maxDistance, date) { // Func
         if (data && data.results && data.results.length > 0) { // If the response contains event data
             data.results.forEach((event) => { // Loop through each event
                 const eventHeader = document.createElement("h3"); // Create an <h3> element
-                eventHeader.textContent = event.title;  // Set the text content of the <h3> element
+
+                // Create an anchor element for the event title
+                const eventTitleLink = document.createElement("a");
+                eventTitleLink.href = `https://www.google.com/search?q=${encodeURIComponent(event.title)}+${encodeURIComponent(cityName)}`;
+                eventTitleLink.target = "_blank"; // Open the link in a new tab
+                eventTitleLink.textContent = event.title; // Set the text content of the link
+
+                eventHeader.appendChild(eventTitleLink); // Append the link to the <h3> element
 
                 const eventDetails = document.createElement("p"); // Create a <p> element
                 eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`; // Set the text content of the <p> element
 
                 const eventItem = document.createElement("li"); // Create an <li> element
-                eventItem.appendChild(eventHeader); // Append the <h3> element to the <li> element
+                eventItem.appendChild(eventHeader); // Append the <h3> element (with the link) to the <li> element
                 eventItem.appendChild(eventDetails); // Append the <p> element to the <li> element
                 eventResults.appendChild(eventItem); // Append the <li> element to the eventResults element
             }); // End of forEach loop
+
         } else {  // If the response does not contain event data
             // Display a message if no events are found
             eventResults.innerHTML = "<p>No events found.</p>"; // Set the text content of the <p> element
@@ -218,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () { // Event listener th
                        return; // Stop further execution
                    }
                    // Fetch events using the selected criteria
-                   fetchEvents(latLng.lat, latLng.lon, selectedCategory, maxDistance, selectedDate); // Call fetchEvents with the latitude, longitude, category, distance, and date
+                   fetchEvents(latLng.lat, latLng.lon, selectedCategory, maxDistance, selectedDate, cityName); // Call fetchEvents with the latitude, longitude, category, distance, and date
                }    // End of if block for checking latLng 
                else {
                    // If latLng is null, show an error message
