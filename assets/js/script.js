@@ -1,117 +1,139 @@
+// API keys
+const geocodingApiKey = "AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg";
+const predicthqApiKey = "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs";
+
+// API keys
+const geocodingApiKey = "AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg";
+const predicthqApiKey = "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs";
+
 // Global variables to store references to various HTML elements and data
 let latLng = null; // Stores latitude and longitude
-let locationInput = document.getElementById("location");
-let categorySelect; // Select element for choosing event category
+categorySelect = document.getElementById("category"); // Select element for category
 let distanceInput; // Input for search radius
 let dateInput; // Input for selecting date
 let eventResults; // Element to display event results
+let locationInput; // Input for location search
+let modal; // Modal element
+let span;   // <span> element that closes the modal
 
-// Add modal related variables
-var modal = document.getElementById("myModal");
-var span = document.getElementsByClassName("close")[0];
-
-// Function to fetch geographic coordinates (latitude and longitude) based on a city name
-function fetchLocationCoordinates(cityName) {
-    // URL for Google Geocoding API with API key and city name
-    const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg`;
-    const requestUrl = `${geocodingApiUrl}&address=${encodeURIComponent(cityName)}`;
-
-    // Log the API request URL to the console for debugging
-    console.log("Geocoding API Request URL:", requestUrl);
-
-    // Fetch request to the Geocoding API
-    fetch(requestUrl) // Fetch request to the Geocoding API full URL
-        .then((response) => {
-            // Handle responses
-            if (!response.ok) {
-                throw new Error(`Geocoding API Error: ${response.status} - ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then((data) => {
-            
-            // Log the API response to the console for debugging
-            console.log("Geocoding API Response:", data);
-
-            // If the response contains location data
-            if (data.results.length > 0) {
-                const location = data.results[0].geometry.location;
-                
-                // Set the global variable with latitude and longitude
-                latLng = {
-                    lat: location.lat,
-                    lon: location.lng,
-                };
-            } else {
-                // If no location data is found, reset latLng and alert the user
-                latLng = null;
-                showModal("City not found. Please enter a valid city name.");
-            }
-        })
-        .catch((error) => {
-            // Log and alert any errors encountered
-            console.error("Error fetching location coordinates:", error);
-            latLng = null;
-            showModal("Error fetching location coordinates. Please try again later.");
-        });
+function showModal(message) { // Function to display a modal with a message
+    document.getElementById("modalText").innerText = message; // Set the modal text
+    modal.style.display = "block"; // Display the modal
 }
 
-// Function to fetch events based on latitude, longitude, category, distance, and date
-function fetchEvents(latitude, longitude, category, maxDistance, formattedDate) {
+function initializeModal() { // Function to initialize the modal
+    modal = document.getElementById("myModal"); // Get the modal
+    span = document.getElementsByClassName("close")[0]; // Get the <span> element that closes the modal
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() { // When the user clicks on <span> (x), close the modal
+        modal.style.display = "none"; // Close the modal
+    }
+
+    window.onclick = function(event) { // When the user clicks anywhere outside of the modal, close it
+        if (event.target == modal) { // If the user clicks anywhere outside of the modal, close it
+            modal.style.display = "none"; // Close the modal
+        }
+    }
+}
+
+function fetchLocationCoordinates(cityName) { // Function to fetch geographic coordinates (latitude and longitude) based on a city name
+    return new Promise((resolve, reject) => { // Create a Promise that resolves when location data is available
+        const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?key=${geocodingApiKey}`; // URL for Google Geocoding API with API key and city name
+        const requestUrl = `${geocodingApiUrl}&address=${encodeURIComponent(cityName)}`; // Construct request URL for Google Geocoding API
+
+        console.log("Geocoding API Request URL:", requestUrl);  // Log the API request URL to the console for debugging
+
+        fetch(requestUrl) // Fetch request to the Geocoding API
+            .then((response) => {
+                // Handle responses
+                if (!response.ok) { // If the response is not OK (i.e. status code is not 200)
+                    throw new Error(`Geocoding API Error: ${response.status} - ${response.statusText}`); // Throw an error
+                }
+                return response.json(); // Return the response as JSON
+            })
+            .then((data) => {  // Handle data received from the Geocoding API
+                console.log("Geocoding API Response:", data); // Log the data received from the Geocoding API to the console for debugging
+
+                if (data.results.length > 0) { // If the response contains location data
+                    const location = data.results[0].geometry.location; // Get the location data from the response
+
+                    latLng = { // Set the global variable with latitude and longitude
+                        lat: location.lat, // Latitude
+                        lon: location.lng,  // Longitude
+                    };
+                    console.log("Latitude:", latLng.lat); // Log the latitude and longitude to the console for debugging
+                    console.log("Longitude:", latLng.lon);  
+
+                    resolve();  // Resolve the Promise
+                } else { 
+                    latLng = null; // Set the global variable to null
+                    showModal("City not found. Please enter a valid city name."); // Show the modal with an error message
+                    reject();   // Reject the Promise
+                }   // End of if block for checking location data
+            })  // End of .then block for fetch request
+            .catch((error) => { // Handle errors
+                console.error("Error fetching location coordinates:", error); // Log the error to the console for debugging
+                latLng = null; // Set the global variable to null
+                showModal("Error fetching location coordinates. Please try again later.");  // Show the modal with an error message
+                reject();  // Reject the Promise
+            }); // End of fetch request
+    }); // End of Promise
+}   // End of fetchLocationCoordinates function
+
+function fetchEvents(latitude, longitude, category, maxDistance, date) { // Function to fetch events based on latitude, longitude, category, distance, and date
+    console.log("Inside fetchEvents function");  // Log to the console for debugging
+ 
     // Construct request URL for PredictHQ API
-    const requestUrl = `https://api.predicthq.com/v1/events/?category=${category}&country=US&within=${maxDistance}mi@${latitude},${longitude}&start.gte=${formattedDate}&sort=start`;
+    const requestUrl = `https://api.predicthq.com/v1/events/?category=${category}&country=US&within=${maxDistance}mi@${latitude},${longitude}&start.gte=${date}&sort=start`;
+
+    console.log("PredictHQ API Request URL:", requestUrl);  // Log the API request URL to the console for debugging
 
     // Fetch request to the PredictHQ API
-    fetch(requestUrl, {
-        headers: {
-            Authorization: "Bearer GT0QbJMQ8mJXqnuGNHzBZg-OjRex-auEcS0ofEAs", // API key for authorization
-        },
+    fetch(requestUrl, { // Fetch request to the PredictHQ API
+        headers: { // Set the request headers
+            Authorization: predicthqApiKey, // Set the Authorization header with the API key
+        }, // End of headers
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+    .then((response) => { // Handle responses
+        if (!response.ok) {     // If the response is not OK (i.e. status code is not 200)
+            throw new Error(`API Error: ${response.status} - ${response.statusText}`); // Throw an error
         }
-        return response.json();
+        return response.json(); // Return the response as JSON
     })
-    .then((data) => {
-        // Clear any previous event results
-        eventResults.innerHTML = "";
+    .then((data) => { // Handle data received from the PredictHQ API
+        eventResults.innerHTML = ""; // Clear any previous event results
 
-        // Check if data is received and has results
-        if (data && data.results && data.results.length > 0) {
-            // Loop through each event and display it
-            data.results.forEach((event) => {
-                // Create and append elements for each event detail
-                const eventHeader = document.createElement("h3");
-                eventHeader.textContent = event.title;
+        if (data && data.results && data.results.length > 0) { // If the response contains event data
+            data.results.forEach((event) => { // Loop through each event
+                const eventHeader = document.createElement("h3"); // Create an <h3> element
+                eventHeader.textContent = event.title;  // Set the text content of the <h3> element
 
-                const eventDetails = document.createElement("p");
-                eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`;
+                const eventDetails = document.createElement("p"); // Create a <p> element
+                eventDetails.textContent = `Category: ${event.category}, Start Date: ${event.start}, End Date: ${event.end}`; // Set the text content of the <p> element
 
-                const eventItem = document.createElement("li");
-                eventItem.appendChild(eventHeader);
-                eventItem.appendChild(eventDetails);
-                eventResults.appendChild(eventItem);
-            });
-        } else {
+                const eventItem = document.createElement("li"); // Create an <li> element
+                eventItem.appendChild(eventHeader); // Append the <h3> element to the <li> element
+                eventItem.appendChild(eventDetails); // Append the <p> element to the <li> element
+                eventResults.appendChild(eventItem); // Append the <li> element to the eventResults element
+            }); // End of forEach loop
+        } else {  // If the response does not contain event data
             // Display a message if no events are found
-            eventResults.innerHTML = "<p>No events found.</p>";
+            eventResults.innerHTML = "<p>No events found.</p>"; // Set the text content of the <p> element
         }
 
-        // Reset the input fields after the search
-        locationInput.value = "";
+        locationInput.value = ""; // Reset the location input field
         dateInput.value = new Date().toISOString().split('T')[0]; // Reset to today's date
     })
-    .catch((error) => {
-        // Log and display any errors encountered
-        console.error("Error fetching event data:", error);
-        eventResults.innerHTML = "<p>Error fetching events. Please try again later.</p>";
+    .catch((error) => { // Handle errors
+        console.error("Error fetching event data:", error); // Log the error to the console for debugging
+        eventResults.innerHTML = "<p>Error fetching events. Please try again later.</p>";   // Set the text content of the <p> element
     });
-}
+}   // End of fetchEvents function
+document.addEventListener("DOMContentLoaded", function () { // Event listener that triggers when the DOM content is fully loaded
+    // Initialize modal first
+    initializeModal(); // Initialize the modal
 
-
-// Event listener that triggers when the DOM content is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
     // Initialize HTML elements by their IDs
     locationInput = document.getElementById("location");
     categorySelect = document.getElementById("category");
