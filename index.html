@@ -17,7 +17,6 @@
     <h1>Event Countdown App.</h1>
     <div class="main-container">
         <div class="input-container">
-        <div class="first">
             <!-- Dropdown menu for categories -->
             <label for="category">Select a Category:</label>
             <select id="category">
@@ -39,68 +38,93 @@
             <input type="date" id="date" name="date">
             <button id="searchButton">Search Events</button>
         </div>
-        </div>
 
         <div class="map-container">
-        <div class="second">
-            
-        </div>
-        </div>
-
-        <div class="details-container">
-        <div class="third">
-            <div class="eventResults">
-                <ul>
-                    <li>"eventHeader"
-                        <h3 class="eventDetails"></h3>
-                        <p></p>
-                    </li>
-                    
-                </ul>
+            <div id="map-container">
+                <!-- The Google Map will be displayed here -->
             </div>
-            
-        </div>
         </div>
 
-        <div class="weather-container">
-        <div class="fourth">
-            
+        <div class="details-container" id="eventResults">
+            <ul>
+                 <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li> 
+            </ul>
         </div>
+
+        <div class="weather-container" id="weather-container">
+            <div>
+            </div>
         </div>
 
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var date = new Date();
+            var day = String(date.getDate()).padStart(2, '0');
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var year = date.getFullYear();
 
-document.addEventListener("DOMContentLoaded", function() {
-    var date = new Date();
-    var day = String(date.getDate()).padStart(2, '0'); // Add leading 0 if needed
-    var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading 0 if needed
-    var year = date.getFullYear();
+            var today = `${year}-${month}-${day}`;
+            document.getElementById("date").value = today;
 
-    var today = `${year}-${month}-${day}`; // Format to YYYY-MM-DD
-    document.getElementById("date").value = today;
-
-    locationInput = document.getElementById('location');
+            locationInput = document.getElementById('location');
             locationInput.addEventListener('input', () => {
                 const inputText = locationInput.value;
+                // You can add logic here for handling location input changes if needed
             });
-});
+        });
     </script>
-
-    <!-- Display the results -->
-<div id="eventResults">
-        <!-- Event data will be displayed here -->
-</div>
-
-<div id="myModal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <p id="modalText">Some text in the Modal..</p>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Some text in the Modal..</p>
+        </div>
     </div>
-
 </body>
 
 </html>
