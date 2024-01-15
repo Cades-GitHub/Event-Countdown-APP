@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>PredictHQ Event Search</title>
+    <title>Event Countdown App.</title>
     <script>
         function initMap() {
             // Your code to initialize the map goes here
@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    <h1>Event Countdown App.</h1>
     <div class="main-container">
         <div class="input-container">
             <!-- Dropdown menu for categories -->
@@ -37,15 +38,69 @@
             <input type="date" id="date" name="date">
             <button id="searchButton">Search Events</button>
         </div>
-        <div class="event-results-container" id="eventResults">
-            <!-- Event data will be displayed here -->
+
+        <div class="map-container">
+            <div id="map-container">
+                <!-- The Google Map will be displayed here -->
+            </div>
         </div>
-        <div id="weather-container" class="weather-container"></div>
+
+        <div class="details-container" id="eventResults">
+            <ul>
+                 <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li>
+                <li>
+                    <h3></h3>
+                    <p></p>
+                </li> 
+            </ul>
+        </div>
+
+        <div class="weather-container" id="weather-container">
+            <div>
+            </div>
+        </div>
+
     </div>
-    <div class="map-container" id="map-container">
-        <!-- The Google Map will be displayed here -->
-    </div>
-    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var date = new Date();
