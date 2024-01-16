@@ -12,23 +12,6 @@ let locationInput; // Input for location search
 let modal; // Modal element
 let span;   // <span> element that closes the modal
 
-function initMap() {
-    // Initialize Google Places Autocomplete here
-    const autocomplete = new google.maps.places.Autocomplete(locationInput);
-    autocomplete.addListener("place_changed", function () {
-        // Your Autocomplete event handler
-    });
-
-    // Set the default center to the middle of the USA (Kansas City, Missouri)
-    const defaultLatLng = { lat: 39.0997, lng: -94.5786 }; // Kansas City, Missouri coordinates
-    const map = new google.maps.Map(document.getElementById("map-container"), {
-        center: defaultLatLng, // Set the center of the map
-        zoom: 5, // Set an appropriate initial zoom level
-    });
-
-    // Optionally, you can add other map configurations here, such as markers, controls, etc.
-}
-
 function showModal(message) { // Function to display a modal with a message
     document.getElementById("modalText").innerText = message; // Set the modal text
     modal.style.display = "block"; // Display the modal
@@ -48,6 +31,50 @@ function initializeModal() { // Function to initialize the modal
             modal.style.display = "none"; // Close the modal
         }
     }
+}
+function initMap() {
+    // Initialize Google Places Autocomplete here
+    console.log("Initializing the map.");
+    const autocomplete = new google.maps.places.Autocomplete(locationInput);
+    console.log("Autocomplete initialized.");
+
+    autocomplete.addListener("place_changed", function () {
+        console.log("Autocomplete event triggered.");
+        // Your Autocomplete event handler
+        const selectedPlace = autocomplete.getPlace();
+        const cityName = selectedPlace.name;
+
+        // Rest of your Autocomplete event handler code here
+        if (selectedPlace.geometry && selectedPlace.geometry.location) {
+            const latitude = selectedPlace.geometry.location.lat();
+            const longitude = selectedPlace.geometry.location.lng();
+
+            // You can use the latitude and longitude values here
+            console.log("Selected Latitude:", latitude);
+            console.log("Selected Longitude:", longitude);
+        } else {
+            console.log("No location data available for the selected place.");
+        }
+
+        // Check if the city name is empty and show the modal if it is
+        if (!cityName.trim()) {
+            showModal("Please enter a city name.");
+            return;
+        }
+
+        // Rest of your Autocomplete event handler code here
+        console.log("Map initialization complete.");
+    });
+
+    // Set the default center to the middle of the USA (Kansas City, Missouri)
+    const defaultLatLng = { lat: 39.0997, lng: -94.5786 }; // Kansas City, Missouri coordinates
+    console.log("Initializing the map with default coordinates.");
+    const map = new google.maps.Map(document.getElementById("map-container"), {
+        center: defaultLatLng, // Set the center of the map
+        zoom: 5, // Set an appropriate initial zoom level
+    });
+
+    // Optionally, you can add other map configurations here, such as markers, controls, etc.
 }
 
 function fetchLocationCoordinates(cityName) { // Function to fetch geographic coordinates (latitude and longitude) based on a city name
@@ -155,40 +182,12 @@ function fetchEvents(latitude, longitude, category, maxDistance, date, cityName)
 document.addEventListener("DOMContentLoaded", function () { // Event listener that triggers when the DOM content is fully loaded
     // Initialize modal first
     initializeModal(); // Initialize the modal
-
     // Initialize HTML elements by their IDs
     locationInput = document.getElementById("location"); // Input for location search
     categorySelect = document.getElementById("category"); // Select element for category
     distanceInput = document.getElementById("distance");  // Input for search radius
     dateInput = document.getElementById("date"); // Input for selecting date
     eventResults = document.getElementById("eventResults"); // Element to display event results
-
-    function initMap() {
-        // Initialize Google Places Autocomplete here
-        const autocomplete = new google.maps.places.Autocomplete(locationInput);
-        autocomplete.addListener("place_changed", function () {
-            const selectedPlace = autocomplete.getPlace(); // Get the selected place
-            const cityName = selectedPlace.name; // Get the city name from the selected place
-
-            // You can then use cityName for further processing
-            if (selectedPlace.geometry && selectedPlace.geometry.location) {    // Check if the selected place has location data
-                const latitude = selectedPlace.geometry.location.lat(); // Get the latitude
-                const longitude = selectedPlace.geometry.location.lng(); // Get the longitude
-
-                // You can use the latitude and longitude values here
-                console.log("Selected Latitude:", latitude); // Log the latitude and longitude to the console for debugging
-                console.log("Selected Longitude:", longitude); 
-            } else {
-                console.log("No location data available for the selected place."); // Log to the console for debugging
-            }
-
-            // Check if the city name is empty and show the modal if it is
-            if (!cityName.trim()) { // Check if the city name is empty
-                showModal("Please enter a city name."); // Show the modal with an error message
-                return; // Stop further execution of the function
-            }
-        });
-    }
     
     // Initialize and set event listener for the search button
     const searchButton = document.getElementById("searchButton"); // Search button

@@ -64,11 +64,8 @@ button:hover {
 }
 
 .map-container {
-    padding: 30px;
-    background-color: #aaa;
-    border-radius: 5px;
-    text-align: center;
-    width: 25%;
+    height: 400px;
+    width: 50%;
 }
 
 .details-container {
