@@ -70,35 +70,28 @@ button:hover { /* Changes Button colors when hovered over */
     border-radius: 5px;
 }
 
-.weather-container { /* Controls the forth container */
+.weather-container { /* Controls the weather container */
     width: 550px;
     height: 100px;
     color: #fff;
-    border-radius: 5px;
+    border-radius: 5px 5px 0px 0px;
     background-color: #007bff;
     padding: 20px 70px 20px 20px;
     display: flex;
     justify-content: space-between;
+    text-align: center;
 }
 
 .current-weather h2 {
     font-weight: 700;
     font-size: 1.7rem;
-}
-
-.current-weather .icon {
     text-align: center;
 }
 
-.current-weather .icon img {
-    max-width: 120px;
-    margin-top: -15px;
-}
-
-.details-container { /* Controls the third container */
+.details-container { /* Controls the details container */
     width: 550px;
     color: #fff;
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
     background-color: #888;
     text-align: center;
     padding: 20px;
@@ -108,7 +101,7 @@ button:hover { /* Changes Button colors when hovered over */
     list-style-type: none; /* Remove bullet markers */
 }
 
-ul { /* Reomove bulletens from bring searched */
+ul { /* Remove bulletens from bring searched */
     list-style-type: none; /* Remove bullet markers */
     color: #007bff;
 }
@@ -174,8 +167,8 @@ ul { /* Reomove bulletens from bring searched */
 
 @media screen and (max-width: 480px) {
     .input-container{
-        width: 200px;
-        padding: 10px;
+        width: 100%;
+        display: flex;
     }
 
     .map-container{
@@ -185,7 +178,7 @@ ul { /* Reomove bulletens from bring searched */
     
     .weather-container{
         width: 200px;
-        padding: 10px;
+        padding: 10px;        
     }
     .details-container{
         width: 200px;
