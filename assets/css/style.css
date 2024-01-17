@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-<<<<<<< HEAD
 *{ /* Keeps content centered to the page */
     margin: 0;
     padding: 0;
@@ -12,29 +11,12 @@ body { /* Background color */
 }
 
 h1 { /* Head color and size */
-=======
-*{
-    margin: auto;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-    align-items: center;
-    justify-content: center;
-}
-
-body {
-    background-color: #d9d9d9;
-}
-
-h1 {
->>>>>>> f720516b26e6c20073f9a2e8dfc5a2e66c4986b3
     font-size: 1.75rem;
     text-align: center;
     padding: 18px 0;
     color: #565656;
 }
 
-<<<<<<< HEAD
 .main-container { /* Controls all 4 containers */
     display: flex;
     gap: 35px;
@@ -49,20 +31,6 @@ h1 {
    padding: 30px;
    display: inline-block;
    text-align: center;
-=======
-.main-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.input-container {
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 5px;
-    text-align: center;
-    width: 25%;
->>>>>>> f720516b26e6c20073f9a2e8dfc5a2e66c4986b3
 }
 
 label { /* Bold Headings */
@@ -95,7 +63,6 @@ button:hover { /* Changes Button colors when hovered over */
     background-color: #0056b3;
 }
 
-<<<<<<< HEAD
 .map-container { /* Controls the second container */
     width: 550px;
     height: 400px;
@@ -144,38 +111,6 @@ button:hover { /* Changes Button colors when hovered over */
 ul { /* Reomove bulletens from bring searched */
     list-style-type: none; /* Remove bullet markers */
     color: #007bff;
-=======
-.map-container {
-    height: 400px;
-    width: 50%;
-}
-
-.details-container {
-    display: inline-block;
-    padding: 30px;
-    background-color: #888;
-    border-radius: 5px;
-    text-align: center;
-    width: 25%;
-}
-
-#eventResults {
-    z-index: 1000;
-    top: 0;
-    list-style-type: none;
-}
-
-ul {
-    list-style-type: none; /* Remove bullet markers */
-}
-
-.weather-container {
-    padding: 30px;
-    background-color: #888;
-    text-align: center;
-    width: 15%;
-    height: 75%;
->>>>>>> f720516b26e6c20073f9a2e8dfc5a2e66c4986b3
 }
 
 /* The Modal (background) */
@@ -216,7 +151,6 @@ ul {
     cursor: pointer;
 }
 
-<<<<<<< HEAD
 @media screen and (max-width: 840px){
     .input-container{
         width: 250px;
@@ -257,23 +191,4 @@ ul {
         width: 200px;
         padding: 10px;
     }
-=======
-@media (max-width: 1400px){
-    .input-container, .map-container,
-    .details-container, .weather-container{
-        padding: 20px;
-    }
-}
-
-@media (max-width:1200px){
-
-}
-
-@media(max-width:950px){
-
-}
-
-@media(max-width:750px){
-    
->>>>>>> f720516b26e6c20073f9a2e8dfc5a2e66c4986b3
 }
