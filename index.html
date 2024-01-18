@@ -11,6 +11,9 @@
         }
     </script>
     <script src="./assets/js/script.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 </head>
 
@@ -40,29 +43,29 @@
             <button id="searchButton">Search Events</button>
         </div>
 
-        <div class="weather-container" style="display: none;">
+        <div class="weather-container">
             <div class="weather__body">
-                <h1 class="weather__city">Weather in [City Name]</h1>
+                <h1 class="weather__city"><!--Weather in [City Name]--></h1>
                 <div class="weather__datetime">
-                    [Date and Time]
+                    <!--[Date and Time]-->
                 </div>
                 <div class="weather__forecast">
-                    [Weather Forecast]
+                    <!--[Weather Forecast]-->
                 </div>
                 <div class="weather__icon">
-                    <img src="" alt="Weather Icon">
+                    <!--<img src="" alt="Weather Icon">-->
                 </div>
                 <p class="weather__temperature">
-                    [Temperature]
+                    <!--[Temperature]-->
                 </p>
                 <div class="weather__minmax">
-                    <p>Min: [Min Temperature]°</p>
-                    <p>Max: [Max Temperature]°</p>
+                    <p><!--Min: [Min Temperature]°--></p>
+                    <p><!--Max: [Max Temperature]°--></p>
                 </div>
             </div>
         
             <div class="weather__forecast-3hour">
-                <h2>3-Hour Weather Forecast</h2>
+                <h2><!--3-Hour Weather Forecast--></h2>
                 <div class="forecast-items">
                     <!-- Forecast items will be dynamically added here using JavaScript -->
                 </div>
@@ -72,35 +75,35 @@
                 <div class="weather__card">
                     <i class="fa-solid fa-temperature-full"></i>
                     <div>
-                        <p>Real Feel</p>
-                        <p class="weather__realfeel">[Real Feel]°</p>
+                        <p><!--Real Feel--></p>
+                        <p class="weather__realfeel"><!--[Real Feel]°--></p>
                     </div>
                 </div>
                 <div class="weather__card">
                     <i class="fa-solid fa-droplet"></i>
                     <div>
-                        <p>Humidity</p>
-                        <p class="weather__humidity">[Humidity]%</p>
+                        <p><!--Humidity--></p>
+                        <p class="weather__humidity"><!--[Humidity]%--></p>
                     </div>
                 </div>
                 <div class="weather__card">
                     <i class="fa-solid fa-wind"></i>
                     <div>
-                        <p>Wind</p>
-                        <p class="weather__wind">[Wind Speed] m/s</p>
+                        <p><!--Wind--></p>
+                        <p class="weather__wind"><!--[Wind Speed] m/s--></p>
                     </div>
                 </div>
                 <div class="weather__card">
                     <i class="fa-solid fa-gauge-high"></i>
                     <div>
-                        <p>Pressure</p>
-                        <p class="weather__pressure">[Pressure] hPa</p>
+                        <p><!--Pressure--></p>
+                        <p class="weather__pressure"><!--[Pressure] hPa--></p>
                     </div>
                 </div>
             </div>
         </div>
              
-        <div class="info-container" style="display: none;">
+        <div class="info-container">
             <div class="details-container" id="eventResults">
                 <ul>
                     <li>
@@ -109,9 +112,11 @@
                     </li>
                 </ul>
             </div>
-            <button id="prevButton">Previous</button>
-            <button id="nextButton">Next</button>
-            <p id="pageCounter"></p>
+            <div class="info-buttons">
+                <button id="prevButton">Previous</button>
+                <button id="nextButton">Next</button>
+                <p id="pageCounter"></p>
+            </div>
         </div>
 
     </div>
