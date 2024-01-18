@@ -238,9 +238,11 @@ ul {
     cursor: pointer;
 }
 
-@media(max-width: 936px){
-    .container {
+@media(max-width: 1025px){
+    .main-container {
         width: 90%;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .weather__header {
@@ -250,10 +252,44 @@ ul {
     .weather__units {
         margin-top: 1rem;
     }
+
+    .weather-container{
+        width: 65%;
+    }
+}
+
+@media(max-width: 700px){
+    .weather__info {
+        grid-template-columns: none;
+    }
+    
+    .main-container{
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .weather-container{
+        width: 100%;
+    }
 }
 
 @media(max-width: 400px){
     .weather__info {
         grid-template-columns: none;
+    }
+    
+    .main-container{
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .weather-container{
+        width: 100%;
+    }
+
+    .details-container{
+        width: 100%;
     }
 }
