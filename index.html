@@ -4,20 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Countdown App.</title>
+    <title>Local Events App</title>
     <script>
         function initMap() {
             // Your code to initialize the map goes here
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbplK3dRw0kIy4Nb0fYGv0TEERkK6cBVg&libraries=places&callback=initMap" async defer></script>
     <script src="./assets/js/script.js"></script>
-    <script src="./assets/js/weather.js"></script>
     <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 </head>
 
 <body>
-    <h1>Event Countdown App.</h1>
+    <h1>Local Events App</h1>
     <div class="main-container">
         <div class="input-container">
             <!-- Dropdown menu for categories -->
@@ -42,22 +40,68 @@
             <button id="searchButton">Search Events</button>
         </div>
 
-        <div class="map-container">
-            <div>
-                <!-- The Google Map will be displayed here -->
+        <div class="weather-container" style="display: none;">
+            <div class="weather__body">
+                <h1 class="weather__city">Weather in [City Name]</h1>
+                <div class="weather__datetime">
+                    [Date and Time]
+                </div>
+                <div class="weather__forecast">
+                    [Weather Forecast]
+                </div>
+                <div class="weather__icon">
+                    <img src="" alt="Weather Icon">
+                </div>
+                <p class="weather__temperature">
+                    [Temperature]
+                </p>
+                <div class="weather__minmax">
+                    <p>Min: [Min Temperature]°</p>
+                    <p>Max: [Max Temperature]°</p>
+                </div>
             </div>
-        </div>
-
-        <div class="info-container">
-            <div class="weather-container">
-                <div class="current-weather">
-                    <div class="details">
-                        <h2>Temperature: __°F</h2>
+        
+            <div class="weather__forecast-3hour">
+                <h2>3-Hour Weather Forecast</h2>
+                <div class="forecast-items">
+                    <!-- Forecast items will be dynamically added here using JavaScript -->
+                </div>
+            </div>
+        
+            <div class="weather__info">
+                <div class="weather__card">
+                    <i class="fa-solid fa-temperature-full"></i>
+                    <div>
+                        <p>Real Feel</p>
+                        <p class="weather__realfeel">[Real Feel]°</p>
+                    </div>
+                </div>
+                <div class="weather__card">
+                    <i class="fa-solid fa-droplet"></i>
+                    <div>
+                        <p>Humidity</p>
+                        <p class="weather__humidity">[Humidity]%</p>
+                    </div>
+                </div>
+                <div class="weather__card">
+                    <i class="fa-solid fa-wind"></i>
+                    <div>
+                        <p>Wind</p>
+                        <p class="weather__wind">[Wind Speed] m/s</p>
+                    </div>
+                </div>
+                <div class="weather__card">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <div>
+                        <p>Pressure</p>
+                        <p class="weather__pressure">[Pressure] hPa</p>
                     </div>
                 </div>
             </div>
-
-            <div class="details-container" id="eventResults"></div>
+        </div>
+             
+        <div class="info-container" style="display: none;">
+            <div class="details-container" id="eventResults">
                 <ul>
                     <li>
                         <h3></h3>
@@ -65,6 +109,9 @@
                     </li>
                 </ul>
             </div>
+            <button id="prevButton">Previous</button>
+            <button id="nextButton">Next</button>
+            <p id="pageCounter"></p>
         </div>
 
     </div>
@@ -90,7 +137,7 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p id="modalText">Some text in the Modal..</p>
+            <p id="modalText"></p>
         </div>
     </div>
 </body>
