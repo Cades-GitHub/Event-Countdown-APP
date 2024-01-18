@@ -17,6 +17,16 @@ h1 {
     color: #565656;
 }
 
+.weather-container {
+    display: none; /* Initially hide the weather container */
+    /* ... (other styles) */
+}
+
+.info-container {
+    display: none; /* Initially hide the info container */
+    /* ... (other styles) */
+}
+
 .main-container {
     display: flex;
     gap: 35px;
