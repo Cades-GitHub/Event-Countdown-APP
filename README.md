@@ -1,4 +1,4 @@
-# Event Countdown App. 
+# Local Events App.
 
 The challenge for this Project was to create a app that uses at least two APIs.
 
