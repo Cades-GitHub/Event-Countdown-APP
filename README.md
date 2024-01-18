@@ -23,5 +23,6 @@ Looking for something new?
 ![Opening](https://github.com/Cades-GitHub/Event-Countdown-APP/assets/46942706/723f2ccd-52ef-46c0-80d2-8d2a5c581056)
 
 What is available to you!
-![Uploading Presentation Landing Page.jpg…]()
+![Presentation Landing Page](https://github.com/Cades-GitHub/Event-Countdown-APP/assets/46942706/a8702f0b-1a85-4a32-bf3e-02c2908b7bb1)
+
 
