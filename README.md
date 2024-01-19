@@ -20,7 +20,8 @@ OpenWeatherMap uses a location and displays the weather conditions for that loca
 # Application:
 
 Looking for something new?
-![Opening](https://github.com/Cades-GitHub/Event-Countdown-APP/assets/46942706/723f2ccd-52ef-46c0-80d2-8d2a5c581056)
+![Capture](https://github.com/Cades-GitHub/Local-Events-App/assets/46942706/d9ffa6e4-efef-49a0-b908-942cbdc29ce8)
+
 
 What is available to you!
 ![Presentation Landing Page](https://github.com/Cades-GitHub/Event-Countdown-APP/assets/46942706/a8702f0b-1a85-4a32-bf3e-02c2908b7bb1)
