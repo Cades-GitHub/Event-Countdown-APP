@@ -4,7 +4,7 @@ The challenge for this Project was to create a app that uses at least two APIs.
 
 As a group, we decided to have an app that can tell a user what events are happening in a city or town, as well as the weather for the event. 
 
-To do this we gave the user 6 options to choose from. They can pick Concerts, sporting events even Expos. After the event was choosen, the user will enter in a city they want and a radius they want from that city. At the end they can pick the date for the event. Then a window will apear with results of the events they wish to attend.
+To do this we gave the user 6 options to choose from. They can pick Concerts, sporting events even Expos. After the event was choosen, the user will enter in a city they want and a radius they want from that city. At the end they can pick the date for the event. Then a window will apear with the results and weather of the events they wish to attend.
 
 Being over achievers that we are... We used 3 APIs for our App.
 
