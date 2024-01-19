@@ -15,7 +15,7 @@ GeoCoding and PridictHQ uses a number of varibles to store references to HTML el
 OpenWeatherMap uses a location and displays the weather conditions for that location on the screen.
 
 # Deployed at:
-https://cades-github.github.io/Event-Countdown-APP/
+[https://cades-github.github.io/Event-Countdown-APP/](https://cades-github.github.io/Local-Events-App/)
 
 # Application:
 
